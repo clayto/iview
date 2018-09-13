@@ -15,12 +15,16 @@
                     <div ref="navScroll" :class="[prefixCls + '-nav-scroll']">
                         <div ref="nav" :class="[prefixCls + '-nav']" class="nav-text"  :style="navStyle">
                             <div :class="barClasses" :style="barStyle"></div>
-                            <div :class="tabCls(item)" v-for="(item, index) in navList" @click="handleChange(index)">
-                                <Icon v-if="item.icon !== ''" :type="item.icon"></Icon>
-                                <Render v-if="item.labelType === 'function'" :render="item.label"></Render>
-                                <template v-else>{{ item.label }}</template>
-                                <Icon v-if="showClose(item)" type="ios-close" @click.native.stop="handleRemove(index)"></Icon>
-                            </div>
+                            
+                                <div :class="tabCls(item)" v-for="(item, index) in navList" @click="handleChange(index)" @mouseover="handlMouseOver(index)" @mouseout="handleMouseOut(index)">
+                                   
+                                    <Icon v-if="item.icon !== ''" :type="item.icon"></Icon>
+                                    <Render v-if="item.labelType === 'function'" :render="item.label"></Render>
+                                    <template v-else>{{ item.label }}</template>
+                                    <Icon v-if="showClose(item)" type="ios-close" @click.native.stop="handleRemove(index)"></Icon>
+                                    
+                                </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -222,6 +226,23 @@
                         [`${prefixCls}-tab-focused`]: item.name === this.focusedKey,
                     }
                 ];
+            },
+            handlMouseOver(index){
+                const tab ={
+                    index: index,
+                    name: this.navList[index].name
+                }; 
+
+                this.$emit('on-mouseover', tab);
+            },
+            handleMouseOut(index){
+
+                 const tab ={
+                    index: index,
+                    name: this.navList[index].name
+                }; 
+
+                this.$emit('on-mouseout', tab);
             },
             handleChange (index) {
                 if (this.transitioning) return;
